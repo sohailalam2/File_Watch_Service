@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+  ~ Copyright 2013 The File Watch Service
+  ~
+  ~  The File Watch Service Project licenses this file to you under the Apache License, version 2.0 (the "License");
+  ~  you may not use this file except in compliance with the License.
+  ~  You may obtain a copy of the License at:
+  ~
+  ~               http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~  Unless required by applicable law or agreed to in writing,
+  ~  software distributed under the License is distributed on an
+  ~  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+  ~  either express or implied.
+  ~  See the License for the specific language governing permissions and limitations under the License.
+  -->
+
+<!--ANT 1.7 is required -->
+<project default="create_run_jar" name="Create Runnable Jar for Project" basedir=".">
+
+    <!-- INITIALIZE -->
+    <target name="init">
+        <deltree dir="${basedir}/distribution"/>
+        <mkdir dir="${basedir}/distribution/javadoc"/>
+    </target>
+
+    <!-- CREATE THE JAVADOC FOR THE PROJECT -->
+    <target name="create-javadoc">
+        <javadoc destdir="${basedir}/distribution/javadoc" author="true" version="true"
+                 use="true" windowtitle="File Watch Service Javadoc">
+            <packageset dir="src" defaultexcludes="yes">
+            </packageset>
+            <doctitle><![CDATA[<h1>Project File Watch Service</h1>]]></doctitle>
+            <bottom><![CDATA[<i>Copyright &#169; 2013 All Rights Reserved.</i>]]></bottom>
+            <tag name="File-Watch-Service" scope="all" description="File-Watch-Service"/>
+            <link offline="true" href="https://github.com/sohailalam2/File-Watch-Service/"
+                  packagelistLoc="${basedir}/distribution/javadoc"/>
+            <link href="https://github.com/sohailalam2/File-Watch-Service/"/>
+        </javadoc>
+    </target>
+
+    <!-- CREATE THE HTTP SERVER & PROXY JAR -->
+    <target name="create_ar" depends="init, create-javadoc">
+        <jar destfile="${basedir}/distribution/file_watch_service.jar"
+             filesetmanifest="mergewithoutmain">
+            <manifest>
+                <attribute name="Built-By" value="${user.name}"/>
+                <attribute name="Main-Class" value=""/>
+                <attribute name="Class-Path" value="."/>
+            </manifest>
+            <fileset dir="${basedir}/out/production/File_Watch_Service">
+                <exclude name="test/com/sohail/alam/watchservice/**.*"/>
+            </fileset>
+        </jar>
+    </target>
+
+    <!-- BUILD THE COMPLETE PROJECT STEP BY STEP -->
+    <target name="create_run_jar" depends="create_ar"/>
+</project>
